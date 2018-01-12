@@ -1,14 +1,17 @@
 :root {
     --ruler-height: 63px;
+    --ruler-width: 875px;
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
 }
 
 #app {
     background: url(sprite.png) no-repeat 0 100%;
+    width: var(--ruler-width);
 }
 
 .expression {
-    font-size: 1.5em;
+    font-size: 2em;
+    text-align: center;
 }
 
 .arrow {
@@ -19,19 +22,17 @@
     left: 35px;
     width: 101px;
     bottom: var(--ruler-height);
-    /* border: 2px solid black; */
 }
 
 .arrow img {
     width: 100%;
 }
 
-.wider {
-    transition: width 1s;
-    width: 200px;
+.invisible {
+    display: none;
 }
 
-.number1 {
+.input1, .input2 {
     width: 1em;
     border-radius: 4px;
     margin-bottom: 4px;
@@ -43,9 +44,12 @@
 
 .ruler {
     margin-top: 100px;
-    width: 875px;
+    width: var(--ruler-width);
     height: 83px;
-    /* height: var(--ruler-height); */
-    /* background-color: lightblue; */
     position: relative;
+}
+
+.invalid {
+    background-color: orange;
+    transition: background-color .5s;
 }
