@@ -1,10 +1,20 @@
 /**
- * Возвращает объект двух чисел a и b
+ * Переменная хранит текущий объект слагаемых
+ * @type {Object}
+ */
+var globalAddends;
+var stages, currentStage;
+
+/**
+ * Генерирует два слагаемых a и b по следующим правилам:
+ * a ∈ [6, 9], a + b ∈ [11, 14]
+ *
  * @returns {Object} объект с двумя слагаемыми
  */
-var getAddends = function() {
+function getAddends() {
     var a = Math.floor(Math.random() * 4) + 6;
     var b;
+
     do {
         b = Math.floor(Math.random() * 6) + 2;
     } while (((a + b) < 11) || ((a + b) > 14));
@@ -13,15 +23,9 @@ var getAddends = function() {
 }
 
 /**
- * Переменная хранит текущий объект слагаемых
- * @type {Object}
- */
-var globalAddends;
-
-/**
  * Добавляет на страницу слагаемые
  */
-var setAddendsToPage = function() {
+function setAddendsToPage() {
     var addend1 = document.getElementsByClassName('addend1')[0];
     var addend2 = document.getElementsByClassName('addend2')[0];
 
@@ -29,15 +33,16 @@ var setAddendsToPage = function() {
     addend2.innerHTML = globalAddends.b;
 }
 
-
-var stages, currentStage;
-
 /**
- * Возвращает объект, в котором хранятся объекты с необходимым для каждой стадии
- * выполнения проверки вводимых згачений.
+ * Генерирует объект стадий выполнения программы, в каждой стадии хранится
+ * значение для сравнения, стрелка, инпут и ref — ссылка на слагаемое,
+ *
  * @returns {Object} объект с описанием каждой стадии
  */
-var getStages = function() {
+function getStages() {
+    var combinedValue = String(globalAddends.a + globalAddends.b);
+    var answer = document.querySelector('.answer');
+
     return {
         0: {
             value: globalAddends.a,
@@ -52,76 +57,127 @@ var getStages = function() {
             ref: document.querySelector('.addend2'),
         },
         2: {
-            value: globalAddends.a,
-            arrow: document.getElementsByClassName('arrow')[0]
+            value: combinedValue[0],
+            input: answer,
+            ref: answer,
         },
         3: {
-            value: globalAddends.b,
-            arrow: document.getElementsByClassName('arrow')[1]
+            value: combinedValue[1],
+            input: answer,
+            ref: answer,
         },
     };
 }
 
 /**
  * Основной цикл проверки вводимых значений и перехода между этапами
- * @param   {[type]} event [description]
- * @returns {[type]}       [description]
  */
-var checkInput = function(event) {
+function checkInput(event) {
     var inputKey = Number(event.key);
-    inputKey && (stages[currentStage].input.value = inputKey);
-    stages[currentStage].ref.classList.remove('invalid');
+    var stage = stages[currentStage];
 
-    if (inputKey !== stages[currentStage].value) {
-        // 4. Если ввод неправильный, то устанавливаем первому слагаемому красный фон
-        console.log('Не то число!');
-        stages[currentStage].ref.classList.add('invalid');
+    if (currentStage >= 2) {
+        correctInput(inputKey, stage);
     } else {
-        // 5. Правильный ввод — рисуем вторую стрелку
-        console.log('Угадал');
-        // showSecondArrow();
+        inputKey && (stage.input.value = inputKey);
+    }
+
+    stage.ref && stage.ref.classList.remove('invalid');
+    stage.input && stage.input.classList.remove('makered');
+
+    if (inputKey != stage.value) {
+        // если ввод неправильный, то устанавливаем первому слагаемому
+        // желтый фон и красный цвет шрифта для инпутов
+        stage.ref.classList.add('invalid');
+        stage.input.classList.add('makered');
+    } else {
+        // правильный ввод
+        if (currentStage !== 2) {
+            stage.input.classList.add('correct');
+        }
         currentStage += 1;
+
         if (currentStage === 1) showSecondArrow();
+        if (currentStage === 2) showAnswerInput();
+        // if (currentStage === 4) gameOver();
     }
 }
 
-var showSecondArrow = function() {
+// function gameOver() {
+//     stage.input.classList.add('correct');
+// }
+
+/**
+ * Корректирует вводимое значение в инпут суммы слагаемых
+ * @param   {Number} inputKey введенное с клавиатуры значение
+ * @param   {Object} stage    объект текущей стадии выполнения программы
+ */
+function correctInput(inputKey, stage) {
+    var inputLength = stage.input.value.length;
+
+    if (inputKey === NaN) return;
+
+    // в инпуте пусто, можно ввдить допустимое значение
+    if (inputLength === 0) {
+        stage.input.value = inputKey;
+        return;
+    }
+
+    // в инпуте одна цифра, неверная, нужно заменить текущей
+    if (inputLength === 1) {
+        if (stage.input.classList.contains('makered')) {
+            stage.input.value = inputKey;
+            return;
+        } else {
+            // в инпуте одна цифра, верная, можно вводить следующее значение
+            stage.input.value += inputKey;
+            return;
+        }
+    }
+
+    // в инпуте две цифры, вторая неверная, нужно заменить текущей
+    if (inputLength === 2) {
+        if (stage.input.classList.contains('makered')) {
+            stage.input.value = stage.input.value[0] + inputKey;
+            return;
+        }
+    }
+}
+
+function showAnswerInput() {
+    document.querySelector('.expression').classList.add('show');
+}
+
+function showSecondArrow() {
     stages[1].arrow.classList.remove('invisible');
 }
 
-var hideSecondArrow = function() {
+function hideSecondArrow() {
     stages[1].arrow.classList.add('invisible');
 }
 
 /**
  * Настройка размеров стрелок
  */
-var setupArrows = function() {
-    // document.removeEventListener('keyup', checkInput);
-    // 1. Вычисляем ширину стрелки
+function setupArrows() {
+    // Вычисляем ширину стрелки
     var firstArrowWidth = globalAddends.a * 39;
     var secondArrowWidth = globalAddends.b * 39;
 
-    // 2. Устанавливаем ширину для блока стрелки в соотношении с линейкой
+    // Устанавливаем ширину для блока стрелки в соотношении с линейкой
     var arrows = document.getElementsByClassName('arrow');
     arrows[0].style.width = firstArrowWidth + 'px';
     arrows[1].style.width = secondArrowWidth + 'px';
     arrows[1].style.left = firstArrowWidth + 35 + 'px';
 
+    // Очищаем значения в инпутах
     stages[0].input.value = '';
     stages[1].input.value = '';
 
     hideSecondArrow();
-
-    // input = document.querySelector('.number1');
-    // input.focus();
-
-    // 3. Слушаем ввод числа для инпута над стрелкой
-    // document.addEventListener('keyup', checkInput);
-    // stage1();
 }
 
-var setNewAddends = function() {
+function setNewAddends() {
     globalAddends = getAddends();
     stages = getStages();
     currentStage = 0;
@@ -131,12 +187,7 @@ var setNewAddends = function() {
 
 setNewAddends();
 
-var app = document.getElementById('app');
-app.addEventListener('click', function() {
-    console.log('app click');
-});
-
-var newBtn = document.getElementsByClassName('btn-add')[0];
-newBtn.addEventListener('click', setNewAddends);
+// var newBtn = document.getElementsByClassName('btn-add')[0];
+// newBtn.addEventListener('click', setNewAddends);
 
 document.addEventListener('keyup', checkInput);

@@ -12,6 +12,24 @@
 .expression {
     font-size: 2em;
     text-align: center;
+    height: 50px;
+}
+
+.expression.show .sum,
+.expression .answer {
+    display: none;
+}
+
+.expression.show .answer {
+    display: inline-block;
+}
+
+.answer {
+    font-size: inherit;
+    width: 1.4em;
+    border: 1px solid #ababab;
+    border-radius: 4px;
+    text-align: center;
 }
 
 .arrow {
@@ -32,10 +50,28 @@
     display: none;
 }
 
-.input1, .input2 {
-    width: 1em;
+.addend1, .addend2 {
+    display: inline-block;
+    width: 0.8em;
     border-radius: 4px;
+}
+
+.input1, .input2 {
+    font-size: 1.5em;
+    text-align: center;
+    width: 0.8em;
     margin-bottom: 4px;
+    border: 1px solid #ababab;
+    border-radius: 4px;
+}
+
+input.makered {
+    color: red;
+}
+
+.correct {
+    border: 1px solid transparent;
+    transition: border 0.5s;
 }
 
 .arrow1 {
@@ -45,11 +81,11 @@
 .ruler {
     margin-top: 100px;
     width: var(--ruler-width);
-    height: 83px;
+    height: 150px;
     position: relative;
 }
 
 .invalid {
-    background-color: orange;
+    background-color: #f6ad3e;
     transition: background-color .5s;
 }
