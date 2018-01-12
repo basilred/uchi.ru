@@ -94,18 +94,14 @@ function checkInput(event) {
         // правильный ввод
         if (currentStage !== 2) {
             stage.input.classList.add('correct');
+            stage.input.disabled = true;
         }
         currentStage += 1;
 
         if (currentStage === 1) showSecondArrow();
         if (currentStage === 2) showAnswerInput();
-        // if (currentStage === 4) gameOver();
     }
 }
-
-// function gameOver() {
-//     stage.input.classList.add('correct');
-// }
 
 /**
  * Корректирует вводимое значение в инпут суммы слагаемых
