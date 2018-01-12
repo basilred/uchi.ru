@@ -183,7 +183,4 @@ function setNewAddends() {
 
 setNewAddends();
 
-// var newBtn = document.getElementsByClassName('btn-add')[0];
-// newBtn.addEventListener('click', setNewAddends);
-
 document.addEventListener('keyup', checkInput);

@@ -70,6 +70,8 @@ input.makered {
 }
 
 .correct {
+    background-color: transparent;
+    color: inherit;
     border: 1px solid transparent;
     transition: border 0.5s;
 }
