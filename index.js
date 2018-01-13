@@ -76,6 +76,8 @@ function checkInput(event) {
     var inputKey = Number(event.key);
     var stage = stages[currentStage];
 
+    if (isNaN(inputKey)) return;
+
     if (currentStage >= 2) {
         correctInput(inputKey, stage);
     } else {
@@ -94,7 +96,6 @@ function checkInput(event) {
         // правильный ввод
         if (currentStage !== 2) {
             stage.input.classList.add('correct');
-            stage.input.disabled = true;
         }
         currentStage += 1;
 
@@ -111,7 +112,7 @@ function checkInput(event) {
 function correctInput(inputKey, stage) {
     var inputLength = stage.input.value.length;
 
-    if (inputKey === NaN) return;
+    if (isNaN(inputKey)) return;
 
     // в инпуте пусто, можно ввдить допустимое значение
     if (inputLength === 0) {
