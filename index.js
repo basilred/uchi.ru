@@ -26,8 +26,8 @@ function getAddends() {
  * Добавляет на страницу слагаемые
  */
 function setAddendsToPage() {
-    var addend1 = document.getElementsByClassName('addend1')[0];
-    var addend2 = document.getElementsByClassName('addend2')[0];
+    var addend1 = document.querySelector('.addend1');
+    var addend2 = document.querySelector('.addend2');
 
     addend1.innerHTML = globalAddends.a;
     addend2.innerHTML = globalAddends.b;
@@ -161,7 +161,7 @@ function setupArrows() {
     var secondArrowWidth = globalAddends.b * 39;
 
     // Устанавливаем ширину для блока стрелки в соотношении с линейкой
-    var arrows = document.getElementsByClassName('arrow');
+    var arrows = document.querySelectorAll('.arrow');
     arrows[0].style.width = firstArrowWidth + 'px';
     arrows[1].style.width = secondArrowWidth + 'px';
     arrows[1].style.left = firstArrowWidth + 35 + 'px';
